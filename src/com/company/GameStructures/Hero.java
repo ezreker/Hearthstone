@@ -15,6 +15,10 @@ public class Hero {
     }
 
     public void hit(int amount){
+        health -= amount;
+    }
 
+    public int getHealth(){
+        return health;
     }
 }

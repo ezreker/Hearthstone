@@ -97,7 +97,7 @@ public class GameFrame extends JFrame implements ServerAction {
 
     private void boardButtonClicked(ActionEvent e){
         int boardSlot = (Integer)((JButton)e.getSource()).getClientProperty( "slot" );
-        if(actionSelected == true){
+        if(actionSelected){
             if(selectedCard > -1) {
                 delegate.playCard(signature, selectedCard, boardSlot);
                 selectedCard = -1;
@@ -120,6 +120,17 @@ public class GameFrame extends JFrame implements ServerAction {
     private void cardSelected(ActionEvent e){
         selectedCard = (Integer)((JButton)e.getSource()).getClientProperty("card");
         updateSelectedCard();
+    }
+
+    private void clickedHero(ActionEvent e){
+        int hero = (Integer)((JButton)e.getSource()).getClientProperty("hero");
+        if(actionSelected){
+            if(selectedBoardSlot > -1){
+                delegate.attack(signature,selectedBoardSlot,20+hero);
+                selectedBoardSlot = -1;
+                updateSelectedCard();
+            }
+        }
     }
 
     private void nullSelected(ActionEvent e){
@@ -162,9 +173,23 @@ public class GameFrame extends JFrame implements ServerAction {
         addToPanel(weapon2, 0,4,1,1);
 
         hero1 = new JButton("<html>Paladin<br/>Health: 30</html>");
+        hero1.putClientProperty("hero",1);
+        hero1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clickedHero(e);
+            }
+        });
         addToPanel(hero1,1,1,1,1);
 
         hero2 = new JButton("<html>Warrior<br/>Health: 30</html>");
+        hero2.putClientProperty("hero",2);
+        hero2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clickedHero(e);
+            }
+        });
         addToPanel(hero2,1,4,1,1);
 
         heroPower1 = new JButton("<html>Reinforce<br/>Cost: 2</html>");
@@ -443,6 +468,12 @@ public class GameFrame extends JFrame implements ServerAction {
 
         String deck2String = parts[7];
         deckSize2 = Integer.valueOf(deck2String);
+
+        String health1String = parts[8];
+        hero1.setText("<html>Paladin<br/>Health: " + health1String + "</html>");
+
+        String health2String = parts[9];
+        hero2.setText("<html>Warrior<br/>Health: " + health2String + "</html>");
 
         boardButtons1 = bb1;
         boardButtons2 = bb2;

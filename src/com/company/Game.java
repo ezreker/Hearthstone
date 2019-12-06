@@ -1,40 +1,43 @@
 package com.company;
 
 import com.company.Client.ServerAction;
+import com.company.Events.GameEvent;
 import com.company.GameStructures.*;
 import com.company.GameStructures.CardTypes.MinionCard;
 
 import java.util.ArrayList;
 
-public class Game implements PlayerAction {
+public class Game implements PlayerAction, GameEvent {
 
     private ArrayList<Player> players;
     private Board board;
+    private EventHandler eventHandler;
     private int active;
     private double p1sig, p2sig;
     private ServerAction delegate;
-
-    public void setDelegate(ServerAction delegate){
-        this.delegate = delegate;
-        sendBoardState();
-    }
 
     public Game(Player player1, Player player2){
 
         players = new ArrayList<>();
 
-        this.active = 0;
+        active = 0;
         p1sig = player1.getSignature();
         p2sig = player2.getSignature();
 
-        this.players.add(player1);
-        this.players.add(player2);
-        this.board = new Board();
+        players.add(player1);
+        players.add(player2);
+        board = new Board();
+        eventHandler = new EventHandler(this);
 
         player1.deal(1);
         player2.deal(2);
 
         player1.startTurn();
+    }
+
+    public void setDelegate(ServerAction delegate){
+        this.delegate = delegate;
+        sendBoardState();
     }
 
     private String translate(Board board, ArrayList<Player> players){
@@ -66,6 +69,11 @@ public class Game implements PlayerAction {
         //encode decks
         for(Player player : players){
             sb.append(player.getDeckSize() + "%");
+        }
+
+        //encode healths
+        for(Player player : players){
+            sb.append(player.getHealth() + "%");
         }
 
         return sb.toString();
@@ -110,21 +118,39 @@ public class Game implements PlayerAction {
 
         if(attackingPlayer == active) {
 
-            MinionCard attackingMinion = board.getBoard(attackingPlayer)[m1 % 10];
-            MinionCard defendingMinion = board.getBoard((attackingPlayer + 1) % 2)[m2 % 10];
+            if(m2 >= 20){
 
-            if(!attackingMinion.isSleeping()) {
+                MinionCard attackingMinion = board.getBoard(attackingPlayer)[m1 % 10];
+                Player player = players.get(m2-21);
 
-                int attack1 = attackingMinion.getAttack();
-                int attack2 = defendingMinion.getAttack();
+                if (!attackingMinion.isSleeping()) {
 
-                attackingMinion.damage(attack2);
-                defendingMinion.damage(attack1);
+                    player.damage(attackingMinion.getAttack());
 
-                board.triggerDeaths();
+                    if (player.isDead()) endGame();
 
-                sendBoardState();
-            } else System.out.println("This minion can't attack yet");
+                    sendBoardState();
+                }
+
+            } else {
+
+                MinionCard attackingMinion = board.getBoard(attackingPlayer)[m1 % 10];
+                MinionCard defendingMinion = board.getBoard((attackingPlayer + 1) % 2)[m2 % 10];
+
+                if (!attackingMinion.isSleeping()) {
+
+                    int attack1 = attackingMinion.getAttack();
+                    int attack2 = defendingMinion.getAttack();
+
+                    attackingMinion.damage(attack2);
+                    defendingMinion.damage(attack1);
+
+                    board.triggerDeaths();
+
+                    sendBoardState();
+
+                } else System.out.println("This minion can't attack yet");
+            }
 
         } else System.out.println("Wrong player's turn");
     }
@@ -145,5 +171,9 @@ public class Game implements PlayerAction {
 
     private void sendBoardState(){
         delegate.sendBoardState(translate(board, players));
+    }
+
+    private void endGame(){
+        System.out.println("Game Over");
     }
 }

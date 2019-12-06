@@ -1,0 +1,11 @@
+﻿id,name,cost,attack,health
+0,Wisp,0,1,1
+1,Murloc Raider,1,2,1
+2,Bloodfen Raptor,2,3,2
+3,River Crocolisk,2,2,3
+4,Magma Rager,3,5,1
+5,Chillwind Yeti,4,4,5
+6,Oasis Snapjaw,4,2,7
+7,Boulderfist Ogre,6,6,7
+8,Core Hound,7,9,5
+9,War Golem,7,7,7

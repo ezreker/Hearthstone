@@ -43,6 +43,18 @@ public class Player{
         }
     }
 
+    public void damage(int amount){
+        hero.hit(amount);
+    }
+
+    public boolean isDead(){
+        return hero.getHealth() <= 0;
+    }
+
+    public int getHealth(){
+        return hero.getHealth();
+    }
+
     public int getMana(){
         return mana;
     }
