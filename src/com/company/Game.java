@@ -101,10 +101,28 @@ public class Game implements PlayerAction, GameEvent {
 
             } else {
 
-                activePlayer.getHand().remove(card);
-                activePlayer.removeMana(cardPlayed.getCost());
-                board.summon(active, position, (MinionCard) cardPlayed);
-                sendBoardState();
+                switch(cardPlayed.getType()) {
+
+                    case(1):
+
+                        if(board.getMinionCounts(active) < 7) {
+                            MinionCard minionPlayed = (MinionCard) cardPlayed;
+                            int battlecry = minionPlayed.getBattlecry();
+
+                            activePlayer.getHand().remove(card);
+                            activePlayer.removeMana(minionPlayed.getCost());
+                            board.summon(active, position, minionPlayed);
+
+                            if (battlecry != -1) {
+                                eventHandler.triggerBattlecry(battlecry, position);
+                            }
+
+                            sendBoardState();
+                            break;
+
+                        } else System.out.println("Not enough space");
+
+                }
 
             }
 
@@ -175,5 +193,22 @@ public class Game implements PlayerAction, GameEvent {
 
     private void endGame(){
         System.out.println("Game Over");
+    }
+
+    @Override
+    public void drawCard(int player) {
+        switch(player) {
+            case 0:
+                players.get(active).draw();
+                break;
+            case 1:
+                players.get((active+1)%2).draw();
+                break;
+        }
+    }
+
+    @Override
+    public void summonMinion(MinionCard minion, int position) {
+        board.summon(active, position, minion);
     }
 }

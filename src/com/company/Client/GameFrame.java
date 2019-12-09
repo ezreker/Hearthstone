@@ -130,6 +130,7 @@ public class GameFrame extends JFrame implements ServerAction {
                 selectedBoardSlot = -1;
                 updateSelectedCard();
             }
+            actionSelected = false;
         }
     }
 

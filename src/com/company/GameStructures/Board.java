@@ -57,6 +57,10 @@ public class Board {
         return cards;
     }
 
+    public int getMinionCounts(int player){
+        return minionCounts[player];
+    }
+
     public void triggerDeaths(){
 
         int i=0;

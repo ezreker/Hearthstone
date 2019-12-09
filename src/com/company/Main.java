@@ -7,8 +7,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int[] deck1 = {1,2,3,4};
-        int[] deck2 = {5,6,7,8};
+        int[] deck1 = {1,2,3,4,9,10,11,12};
+        int[] deck2 = {5,6,7,8,13,14,0};
 
         DeckBuilder deckBuilder = new DeckBuilder(deck1, deck2);
 

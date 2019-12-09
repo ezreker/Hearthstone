@@ -11,7 +11,7 @@ public class EventHandler {
         battlecryHandler = new BattlecryHandler(delegate);
     }
 
-    public void triggerBattlecry(int id){
-        battlecryHandler.triggerBattlecry(id);
+    public void triggerBattlecry(int id, int position){
+        battlecryHandler.triggerBattlecry(id,position);
     }
 }

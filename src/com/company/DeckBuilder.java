@@ -55,8 +55,9 @@ public class DeckBuilder {
         int cost = Integer.valueOf(currentCard[2]);
         int attack = Integer.valueOf(currentCard[3]);
         int health = Integer.valueOf(currentCard[4]);
+        int battlecry = Integer.valueOf(currentCard[5]);
 
-        return new MinionCard(name,cost,attack,attack,health,health);
+        return new MinionCard(name,cost,attack,health,battlecry);
     }
 
     public ArrayList<Card> getDeck(int deck){

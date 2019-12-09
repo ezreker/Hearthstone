@@ -10,16 +10,18 @@ public class MinionCard extends Card {
     private int cost;
     private int health, maxhealth, basehealth;
     private int attack, baseattack;
+    private int battlecry;
     private boolean sleeping;
 
-    public MinionCard(String name, int cost, int attack, int baseattack, int maxhealth, int basehealth){
+    public MinionCard(String name, int cost, int attack, int health, int battlecry){
         this.name = name;
         this.cost = cost;
         this.attack = attack;
-        this.baseattack = baseattack;
-        this.health = maxhealth;
-        this.maxhealth = maxhealth;
-        this.basehealth = basehealth;
+        this.baseattack = attack;
+        this.health = health;
+        this.maxhealth = health;
+        this.basehealth = health;
+        this.battlecry = battlecry;
         this.sleeping = false;
     }
 
@@ -36,8 +38,18 @@ public class MinionCard extends Card {
         return health;
     }
 
+    @Override
     public int getCost(){
         return cost;
+    }
+
+    @Override
+    public int getType() {
+        return 1;
+    }
+
+    public int getBattlecry(){
+        return battlecry;
     }
 
     public void setSleeping(boolean s){
